@@ -1,0 +1,44 @@
+# macOS
+.DS_Store
+
+# Secrets. The API key and certificates are repository secrets.
+fastlane/api_key.json
+fastlane/*.p8
+*.p8
+*.p12
+
+# https://github.com/github/gitignore/blob/main/Global/Xcode.gitignore
+
+## User settings
+xcuserdata/
+
+# https://github.com/github/gitignore/blob/main/Swift.gitignore
+
+## Obj-C/Swift specific
+*.hmap
+
+## App packaging
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+## Playgrounds
+timeline.xctimeline
+playground.xcworkspace
+
+# Swift Package Manager
+.build/
+
+# fastlane
+#
+# Screenshots are generated at release time and are not stored.
+# https://docs.fastlane.tools/best-practices/source-control/#source-control
+
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/
+fastlane/test_output
+.env
+build/
+.bundle/
+vendor/bundle/

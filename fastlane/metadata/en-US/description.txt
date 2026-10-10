@@ -1,0 +1,1 @@
+Tap the screen. The number goes up.
