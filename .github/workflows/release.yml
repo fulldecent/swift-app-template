@@ -338,7 +338,8 @@ jobs:
       - name: Submit for review
         env:
           BUILD_NUMBER: ${{ needs.testflight.outputs.build_number }}
-        run: bundle exec fastlane submit_app_store "build_number:$BUILD_NUMBER"
+          APP_VERSION: ${{ needs.testflight.outputs.version }}
+        run: bundle exec fastlane submit_app_store "build_number:$BUILD_NUMBER" "version:$APP_VERSION"
 
   publish:
     name: Publish the GitHub release

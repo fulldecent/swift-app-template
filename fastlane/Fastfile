@@ -27,8 +27,10 @@ IOS_DEVICES = [
   { names: ["iPad Pro 13-inch (M5)", "iPad Pro 13-inch (M4)"], label: "ipad_pro_13" }
 ].freeze
 
+# fastlane 2.240 sends these two answers. It does not send the Advertising
+# Identifier answer, and it does not upload the App Privacy questionnaire.
+# Those stay in App Store Connect from the last time a person filled them in.
 SUBMISSION_INFORMATION = {
-  add_id_info_uses_idfa: false,
   export_compliance_uses_encryption: false,
   content_rights_contains_third_party_content: false
 }.freeze
@@ -326,6 +328,8 @@ end
 def launch_args(language, apple_locale, screenshot)
   args = []
   args << "-screenshot" if screenshot
+  # -AppleLanguages does not change Locale.current in a Mac process that was
+  # launched directly. The app reads -AppleLocale itself. See ContentView.swift.
   args + ["-AppleLanguages", "(#{language})", "-AppleLocale", apple_locale]
 end
 
@@ -540,10 +544,18 @@ lane :upload_screenshots do
   UI.success("Uploaded screenshots for #{version}")
 end
 
-desc "Submit the TestFlight build to App Store review for iOS and macOS. Pass build_number:. Screenshots must already be under fastlane/screenshots. What's New is the newest CHANGELOG.md section."
+# Review has to name the version that was uploaded. ship_testflight may have
+# moved one patch past VERSION when that version was already on sale.
+def version_for_review!(options)
+  uploaded = options[:version].to_s.strip
+  return uploaded unless uploaded.empty?
+  open_train_version!(apply_version_file!)
+end
+
+desc "Submit the TestFlight build to App Store review for iOS and macOS. Pass build_number: and version: from the TestFlight upload. Screenshots must already be under fastlane/screenshots. What's New is the newest CHANGELOG.md section."
 lane :submit_app_store do |options|
   require_identity!
-  version = apply_version_file!
+  version = version_for_review!(options)
   build_number = options[:build_number].to_s.strip
   UI.user_error!("Pass build_number: from the TestFlight upload") if build_number.empty?
   notes = changelog_notes

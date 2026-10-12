@@ -70,9 +70,15 @@ npx markdownlint-cli@latest "**/*.md" --fix
 
 Use `fix:`, `feat:` or `BREAKING CHANGE:` in your commit messages. This triggers our bot to make a release draft pull request. `ci:` and `chore:` do not. Merging that pull request is what ships a new App Store version. You do not edit [VERSION](VERSION) or the marketing version by hand.
 
-Every push to `main` runs the tests. When the App Store secrets below are set, that push also uploads an iOS build and a macOS build to TestFlight and distributes both to the internal group App Store Connect Users. The marketing version comes from [VERSION](VERSION). When that version is already on sale, the upload uses the next patch number and does not commit it. Apple rejects a new build on a closed train (altool 90186). The build number is one higher than the newest TestFlight build on either platform and is not committed.
+Every push to `main` runs the tests. When the App Store secrets below are set, that push also uploads an iOS build and a macOS build to TestFlight and distributes both to the internal group App Store Connect Users. That group belongs to this app. Add each Apple ID to the group for this app. The build shows up after that person accepts the invitation. The account holder is not added by the upload.
 
-Store text lives in [fastlane/metadata](fastlane/metadata) for iOS and [fastlane/metadata-macos](fastlane/metadata-macos) for macOS. The two folders are uploaded separately and may differ. Screenshots are generated for iPhone, iPad and Mac during a release and are not committed. What's New is the newest section of [CHANGELOG.md](CHANGELOG.md).
+The marketing version comes from [VERSION](VERSION). When that version is already on sale, the upload uses the next patch number and does not commit it. Apple rejects a new build on a closed train (altool 90186). The review submission uses that uploaded version, which the TestFlight job passes through. The build number is one higher than the newest TestFlight build on either platform and is not committed.
+
+Release Please opens its pull request as `github-actions`. GitHub holds the checks on that pull request until a person approves the workflow run. Approving it lets the checks run. Merging it is still a separate step.
+
+Store text lives in [fastlane/metadata](fastlane/metadata) for iOS and [fastlane/metadata-macos](fastlane/metadata-macos) for macOS. The two folders are uploaded separately and may differ. Screenshots are generated for iPhone, iPad and Mac during a release and are not committed. A Mac screenshot is drawn by the app. The runner cannot see another app's window, and `-AppleLanguages` does not change `Locale.current` for that process, so the view reads `-AppleLocale`. What's New is the newest section of [CHANGELOG.md](CHANGELOG.md).
+
+App Privacy, and whether the app uses the Advertising Identifier, are answered in App Store Connect. They are not files in this repository. fastlane 2.240 sends the encryption answer and the third-party content answer. A new app needs the App Store Connect answers filled in before the first review submission. An app that already has them keeps those answers.
 
 [fastlane/Fastfile](fastlane/Fastfile) strips `/opt/homebrew` and `/usr/local` from `PATH` before `xcodebuild -exportArchive`. Xcode's IPA export calls `rsync -E`, and Homebrew's `rsync` rejects that flag ("Copy failed").
 

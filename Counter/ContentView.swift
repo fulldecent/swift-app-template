@@ -8,6 +8,28 @@ func screenshotValue() -> Int {
   ProcessInfo.processInfo.arguments.contains("-screenshot") ? 1 : 0
 }
 
+/// `-AppleLanguages` does not change `Locale.current` when the Mac app is
+/// launched as a binary. Screenshot runs pass `-AppleLocale` and the view
+/// uses that locale.
+func localeFromLaunchArguments() -> Locale? {
+  let arguments = ProcessInfo.processInfo.arguments
+  guard let index = arguments.firstIndex(of: "-AppleLocale"),
+    arguments.indices.contains(index + 1)
+  else { return nil }
+  return Locale(identifier: arguments[index + 1])
+}
+
+extension View {
+  @ViewBuilder
+  func screenshotLocale() -> some View {
+    if let locale = localeFromLaunchArguments() {
+      environment(\.locale, locale)
+    } else {
+      self
+    }
+  }
+}
+
 #if os(macOS)
   enum MacScreenshot {
     static let width: CGFloat = 1440
@@ -24,6 +46,7 @@ func screenshotValue() -> Int {
       let renderer = ImageRenderer(
         content: CounterCanvas(value: value)
           .frame(width: width, height: height)
+          .screenshotLocale()
       )
       renderer.scale = 1
 
@@ -71,6 +94,7 @@ struct ContentView: View {
 
   var body: some View {
     CounterCanvas(value: model.value)
+      .screenshotLocale()
       .onTapGesture {
         model.increment()
       }
