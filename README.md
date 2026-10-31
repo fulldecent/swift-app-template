@@ -146,7 +146,7 @@ We specifically will not add a Swift package release, a Linux library or a secon
 ## References
 
 1. We use title case only for proper nouns, including the name of our project.
-1. This project is built based on [best practices documented in project-template](https://github.com/fulldecent/project-template), release 1.3.0.
+1. This project is built based on [best practices documented in project-template](https://github.com/fulldecent/project-template), release v1.4.1.
 1. Continuous integration follows the shape of [rust-template](https://github.com/fulldecent/rust-template), release 1.1.0: a build-and-test workflow, a lint workflow and a release workflow. The test command is `xcodebuild`, because this is an app.
 1. The upload rules in [fastlane/Fastfile](fastlane/Fastfile) are the ones confirmed while shipping [8 Ball Answer](https://github.com/fulldecent/8-ball-answer): altool rather than `upload_to_testflight`, the next patch when the live version is closed, one build number shared by iOS and macOS, manual profiles created at build time, a Mac package only when `sdk` is `macosx`, and screenshots drawn by the app because the runner cannot record another app's window.
 1. Swift ignore rules come from [GitHub's Swift gitignore](https://github.com/github/gitignore/blob/main/Swift.gitignore) and [Xcode gitignore](https://github.com/github/gitignore/blob/main/Global/Xcode.gitignore).
