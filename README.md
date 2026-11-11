@@ -100,15 +100,9 @@ This template repository does not set the App Store secrets, so its own release 
 > [!NOTE]
 > In your GitHub repository settings, under Actions, General, Workflow permissions, select read and write permissions and check "Allow GitHub Actions to create and approve pull requests". Sign the Apple Developer Program agreement. App Store Connect API calls fail until it is in effect.
 >
-> A repository created from this template starts with no tags and no releases. Release Please reads the latest tag on the default branch to choose the next version. A repository with no tag gets a first release pull request. The publish job accepts a tag shaped like `v1.2.3`.
+> A repository created from this template starts with no tags and no releases. Release Please reads the latest tag on the default branch to choose the next version. The publish job accepts a tag shaped like v1.2.3.
 >
-> Set the starting tag on the current `main` commit when this repository should start at a version you already shipped. `v0.0.0` is the version Release Please counts forward from.
->
-> ```sh
-> gh api --method POST repos/{owner}/{repo}/git/refs \
->   -f ref="refs/tags/v0.0.0" \
->   -f sha="$(gh api repos/{owner}/{repo}/commits/main --jq .sha)"
-> ```
+> If you are adopting this template from an existing project and your first Release Please pull request is not getting the version number right, check the Release Please documentation. You may need to add a configuration option if you do not use a "v" prefix in your release tag names, and for other situations.
 
 #### Setup
 
